@@ -5,13 +5,13 @@ import Dashboard from "./component/Dashboard";
 import "./App.css";
 import EssayWriting from "./component/essayWrittingPage";
 import FeedbackApp from "./component/box";
-
+import LearnerList from "./component/addComponent";
 function App() {
   return (
     <Router>
       <Routes>
         {/* Define routes for components */}
-        <Route path="/" element={<Signin/>} />
+        <Route path="/" element={<LearnerList/>} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/writing" element={<EssayWriting />} />
