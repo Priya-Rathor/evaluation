@@ -11,7 +11,7 @@ function App() {
     <Router>
       <Routes>
         {/* Define routes for components */}
-        <Route path="/" element={<FeedbackApp/>} />
+        <Route path="/" element={<Signin/>} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/writing" element={<EssayWriting />} />
