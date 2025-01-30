@@ -1,20 +1,23 @@
 import React, { useState } from "react";
 
-const LearnerList = ({ user = "Learners" }) => {
-  const [learners, setLearners] = useState([]);
+const AssessorList = () => {
+  // State to store assessors
+  const [assessors, setAssessors] = useState([]);
+
+  // UI control states
   const [addMethod, setAddMethod] = useState("none"); // 'none', 'choose', 'form', 'csv'
   const [showForm, setShowForm] = useState(false);
   const [showCSVUpload, setShowCSVUpload] = useState(false);
-  const [editIndex, setEditIndex] = useState(null); // null or index of learner being edited
+  const [editIndex, setEditIndex] = useState(null); // null or index of assessor being edited
 
-  // NEW: Temporary state to store CSV-parsed learners before saving
-  const [csvLearners, setCsvLearners] = useState([]);
+  // Temporary state to store CSV-parsed assessors before saving
+  const [csvAssessors, setCsvAssessors] = useState([]);
 
-  // NEW: Dark mode state
+  // Dark mode state
   const [darkMode, setDarkMode] = useState(false);
 
-  // Handle "Add Learner" button click
-  const handleAddLearnerClick = () => {
+  // Handle "Add Assessor" button click
+  const handleAddAssessorClick = () => {
     setAddMethod("choose");
     setEditIndex(null);
   };
@@ -29,7 +32,7 @@ const LearnerList = ({ user = "Learners" }) => {
     setAddMethod(method);
   };
 
-  // Handle form submission for adding or editing
+  // Handle form submission for adding or editing an assessor
   const handleFormSubmit = (e) => {
     e.preventDefault();
     const name = e.target.name.value.trim();
@@ -37,14 +40,14 @@ const LearnerList = ({ user = "Learners" }) => {
     const course = e.target.course.value.trim();
     if (name && email && course) {
       if (editIndex !== null) {
-        // Editing existing learner
-        const updatedLearners = learners.map((learner, idx) =>
-          idx === editIndex ? { name, email, course } : learner
+        // Editing existing assessor
+        const updatedAssessors = assessors.map((assessor, idx) =>
+          idx === editIndex ? { name, email, course } : assessor
         );
-        setLearners(updatedLearners);
+        setAssessors(updatedAssessors);
       } else {
-        // Adding new learner
-        setLearners([...learners, { name, email, course }]);
+        // Adding new assessor
+        setAssessors([...assessors, { name, email, course }]);
       }
       // Reset states
       setShowForm(false);
@@ -61,7 +64,7 @@ const LearnerList = ({ user = "Learners" }) => {
     const reader = new FileReader();
     reader.onload = (event) => {
       const lines = event.target.result.split("\n").slice(1); // Skip header line
-      const newLearners = lines
+      const newAssessors = lines
         .map((line) => {
           // Expecting: name,email,course
           const columns = line.split(",");
@@ -74,27 +77,27 @@ const LearnerList = ({ user = "Learners" }) => {
           return null;
         })
         .filter(Boolean);
-      setCsvLearners(newLearners);
+      setCsvAssessors(newAssessors);
     };
     reader.readAsText(file);
   };
 
   // Handle "Save" button after CSV is parsed
   const handleCSVSave = () => {
-    // Merge parsed CSV learners into main state
-    setLearners([...learners, ...csvLearners]);
+    // Merge parsed CSV assessors into main state
+    setAssessors([...assessors, ...csvAssessors]);
     // Reset & close
-    setCsvLearners([]);
+    setCsvAssessors([]);
     setShowCSVUpload(false);
     setAddMethod("none");
   };
 
-  // Handle deletion of a learner
+  // Handle deletion of an assessor
   const handleDelete = (index) => {
-    setLearners(learners.filter((_, i) => i !== index));
+    setAssessors(assessors.filter((_, i) => i !== index));
   };
 
-  // Handle editing of a learner
+  // Handle editing of an assessor
   const handleEdit = (index) => {
     setEditIndex(index);
     setAddMethod("form");
@@ -107,14 +110,14 @@ const LearnerList = ({ user = "Learners" }) => {
     setShowForm(false);
     setShowCSVUpload(false);
     setEditIndex(null);
-    // Discard any parsed CSV learners if user cancels
-    setCsvLearners([]);
+    // Discard any parsed CSV assessors if user cancels
+    setCsvAssessors([]);
   };
 
   // Handle Save All button click (for entire list)
   const handleSaveAll = () => {
-    console.log("Saving all learners:", learners);
-    alert("All learners have been saved successfully!");
+    console.log("Saving all assessors:", assessors);
+    alert("All assessors have been saved successfully!");
   };
 
   return (
@@ -125,24 +128,24 @@ const LearnerList = ({ user = "Learners" }) => {
         
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+          {/* Title */}
           <h1 className="text-3xl font-bold text-blue-700 dark:text-white mb-4 sm:mb-0">
-            {user}
+            Assessors
           </h1>
+
           <div className="flex space-x-3">
-            
-            {/* Add Learner Button */}
+            {/* Add Assessor Button */}
             <button
-              onClick={handleAddLearnerClick}
+              onClick={handleAddAssessorClick}
               className="px-6 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-lg hover:bg-blue-600 transition-all"
             >
-              Add {user}
+              Add Assessor
             </button>
           </div>
         </div>
 
-        {/* Learners List */}
+        {/* Assessors List */}
         <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-auto">
-          
           {/* Table Header */}
           <div className="hidden md:flex bg-gray-100 dark:bg-gray-700 p-4 font-semibold text-gray-700 dark:text-gray-200">
             <div className="w-1/4">Name</div>
@@ -151,9 +154,9 @@ const LearnerList = ({ user = "Learners" }) => {
             <div className="w-1/4">Actions</div>
           </div>
 
-          {/* Learner Rows */}
-          {learners.length > 0 ? (
-            learners.map((learner, index) => (
+          {/* Assessor Rows */}
+          {assessors.length > 0 ? (
+            assessors.map((assessor, index) => (
               // On mobile, use flex-col; on md+ screens, use flex-row
               <div
                 key={index}
@@ -166,19 +169,19 @@ const LearnerList = ({ user = "Learners" }) => {
                 {/* Name */}
                 <div className="w-full md:w-1/4 flex items-center space-x-2 mb-2 md:mb-0">
                   <span className="text-base md:text-lg font-medium text-gray-800 dark:text-gray-200">
-                    {index + 1}. {learner.name}
+                    {index + 1}. {assessor.name}
                   </span>
                 </div>
                 {/* Email */}
                 <div className="w-full md:w-1/4 mb-2 md:mb-0">
                   <span className="text-sm text-gray-600 dark:text-gray-300">
-                    {learner.email}
+                    {assessor.email}
                   </span>
                 </div>
                 {/* Course */}
                 <div className="w-full md:w-1/4 mb-2 md:mb-0">
                   <span className="text-sm text-gray-600 dark:text-gray-300">
-                    {learner.course}
+                    {assessor.course}
                   </span>
                 </div>
                 {/* Actions */}
@@ -200,7 +203,7 @@ const LearnerList = ({ user = "Learners" }) => {
             ))
           ) : (
             <div className="p-4 text-center text-gray-500 dark:text-gray-400">
-              No learners available.
+              No assessors available.
             </div>
           )}
         </div>
@@ -220,7 +223,7 @@ const LearnerList = ({ user = "Learners" }) => {
           <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-80">
               <h2 className="text-xl font-bold text-gray-700 dark:text-gray-200 mb-4">
-                Add {user}
+                Add Assessor
               </h2>
               <button
                 onClick={() => handleSelectAddMethod("form")}
@@ -249,7 +252,7 @@ const LearnerList = ({ user = "Learners" }) => {
           <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96">
               <h2 className="text-xl font-bold text-gray-700 dark:text-gray-200 mb-4">
-                {editIndex !== null ? "Edit Learner" : "Add Learner"}
+                {editIndex !== null ? "Edit Assessor" : "Add Assessor"}
               </h2>
               <form onSubmit={handleFormSubmit} className="space-y-4">
                 <div>
@@ -264,7 +267,7 @@ const LearnerList = ({ user = "Learners" }) => {
                     id="name"
                     name="name"
                     defaultValue={
-                      editIndex !== null ? learners[editIndex]?.name : ""
+                      editIndex !== null ? assessors[editIndex]?.name : ""
                     }
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                     required
@@ -282,7 +285,7 @@ const LearnerList = ({ user = "Learners" }) => {
                     id="email"
                     name="email"
                     defaultValue={
-                      editIndex !== null ? learners[editIndex]?.email : ""
+                      editIndex !== null ? assessors[editIndex]?.email : ""
                     }
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                     required
@@ -300,7 +303,7 @@ const LearnerList = ({ user = "Learners" }) => {
                     id="course"
                     name="course"
                     defaultValue={
-                      editIndex !== null ? learners[editIndex]?.course : ""
+                      editIndex !== null ? assessors[editIndex]?.course : ""
                     }
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
                     required
@@ -342,11 +345,11 @@ const LearnerList = ({ user = "Learners" }) => {
                 className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
               />
 
-              {/* Preview the number of parsed learners */}
-              {csvLearners.length > 0 && (
+              {/* Preview the number of parsed assessors */}
+              {csvAssessors.length > 0 && (
                 <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded">
                   <p className="text-sm text-blue-800 dark:text-blue-200">
-                    Found <strong>{csvLearners.length}</strong> learners in CSV.
+                    Found <strong>{csvAssessors.length}</strong> assessors in CSV.
                   </p>
                 </div>
               )}
@@ -359,8 +362,8 @@ const LearnerList = ({ user = "Learners" }) => {
                 >
                   Cancel
                 </button>
-                {/* Show Save button only if csvLearners > 0 */}
-                {csvLearners.length > 0 && (
+                {/* Show Save button only if csvAssessors > 0 */}
+                {csvAssessors.length > 0 && (
                   <button
                     onClick={handleCSVSave}
                     className="px-4 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600"
@@ -377,4 +380,4 @@ const LearnerList = ({ user = "Learners" }) => {
   );
 };
 
-export default LearnerList;
+export default AssessorList;

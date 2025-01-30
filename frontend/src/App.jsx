@@ -6,12 +6,13 @@ import "./App.css";
 import EssayWriting from "./component/essayWrittingPage";
 import FeedbackApp from "./component/box";
 import LearnerList from "./component/addComponent";
+import AssessmentsList from "./component/Assessment"
 function App() {
   return (
     <Router>
       <Routes>
         {/* Define routes for components */}
-        <Route path="/" element={<LearnerList/>} />
+        <Route path="/" element={<AssessmentsList/>} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/writing" element={<EssayWriting />} />
