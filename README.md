@@ -160,18 +160,7 @@ Content-Type: application/json
 
 ---
 
-## 📜 License
 
-MIT License – Free to use, modify and distribute.
-
-```
-
----
-
-Let me know if you'd like to:
-
-- Add **JWT Auth** and refresh token logic  
-- Deploy this on **Render + Vercel**  
 - Add a dashboard/profile page after login  
 
 I can guide you step-by-step or write those modules for you.
