@@ -159,9 +159,3 @@ Content-Type: application/json
 * Axios, Postman (for testing)
 
 ---
-
-
-- Add a dashboard/profile page after login  
-
-I can guide you step-by-step or write those modules for you.
-```
